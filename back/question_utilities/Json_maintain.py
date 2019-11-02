@@ -4,18 +4,27 @@ from prettyprinter import cpprint
 from json_transfer import structure_create
 
 
-class Json_Maintain():
-	def __init__(self,questions_contents_name="questions_contents.json",questions_structure_name="questions_structure.json",answer_history_name="answer_history.json"):
 
+'''
+用以维护题目的源文件以及提供存储题目的数据结构（存着所有题目的dic，存着题目类型/难度/题号的structure，存着回答历史的answer_history）
+
+'''
+
+
+class Json_maintain():
+	def __init__(self,questions_contents_name="questions_contents.json",questions_structure_name="questions_structure.json",answer_history_name="answer_history.json",answers_name="answers.json",explanations_name = 'explanations.json'):
 		self.questions_contents_name = questions_contents_name
 		self.questions_structure_name = questions_structure_name
 		self.answer_history_name =answer_history_name
+		self.answers_name = answers_name
+		self.explanations_name = explanations_name
 		#读入json
 		self.questions_contents = None
 		self.questions_structure = None
 		self.answer_history = None
-		#解析的数据结构，存着题号：解答的内容
 		self.answers = None
+		self.explanations = None
+
 		self.load()
 		#构建题库数据结构
 		self.questions_repo = self.repo_build()
@@ -32,8 +41,6 @@ class Json_Maintain():
 		#利用refresh将新内容冲回文件,同时也刷新了repo和structure，一举两得
 		self.refresh()
 
-
-
 	#修改question_contents的内容
 	def questions_contents_alter(self):
 		pass
@@ -47,13 +54,18 @@ class Json_Maintain():
 		self.json_save(self.questions_structure,self.questions_structure_name)
 		#保存answer_history?
 		self.json_save(self.answer_history,self.answer_history_name)
+		#保存answers
+		self.json_save(self.answers,self.answers_name)
+		#保存explanations
+		self.json_save(self.explanations,self.explanations_name)
 
 	#读入所有题库文件和answer_history文件
 	def load(self):
 		self.questions_contents = self.json_load(self.questions_contents_name)
 		self.questions_structure = self.json_load(self.questions_structure_name)
 		self.answer_history = self.json_load(self.answer_history_name)
-
+		self.explanations = self.json_load(self.explanations_name)
+		self.answers = self.json_load(self.answers_name)
 
 	#刷新repo，由于answer_history在使用的过程中可能会变，日后可能会添加自己增加题目的功能,本质是刷新所有文件和类内数据结构
 	def refresh(self):
@@ -61,7 +73,6 @@ class Json_Maintain():
 		self.save()
 		#第二步，利用从json_transfer引入的构建structure的方法创建新的structure然后引入新的structure
 		structure_create(self.questions_contents_name,self.questions_structure_name)
-		
 		#第三步,利用load读入新的文件
 		self.load()
 
@@ -83,7 +94,7 @@ class Json_Maintain():
 		file.write(dest_json)
 		file.close()
 
-	#结合回答历史，做一个新的repo,repo的一级结构是这道题目是否回答过，二级结构之后就和questions_structure一样了
+	#结合回答历史，做一个新的repo,repo的一级结构是这道题目是否回答过，二级结构是这道题目是否回答正确，三级结构之后就和questions_structure一样了
 	def repo_build(self):
 		dic = {'done':{},'undone':{}}
 		for typ_k,typ_v in self.questions_structure.items():
@@ -110,7 +121,7 @@ class Json_Maintain():
 
 
 if __name__ == '__main__':
-	json_maintainer = Json_Maintain()
+	json_maintainer = Json_maintain()
 
 
 	cpprint(json_maintainer.questions_repo)

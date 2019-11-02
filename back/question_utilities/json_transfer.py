@@ -43,7 +43,6 @@ def structure_create(src_name = "questions_contents.json",dest_name = "questions
 	file.close()
 
 
-
 #创建回答历史，结构为正确/错误  '题号':回答
 def answer_history_create(dest_name = "answer_history.json"):
 
@@ -55,8 +54,14 @@ def answer_history_create(dest_name = "answer_history.json"):
 	file.write(answer_history_json)
 	file.close
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
+	structure_create()
 	answer_history_create()
+
+	file = open('explanations.json','r',encoding ="utf8")
+	json = json.load(file)
+	file.close()
+	cpprint(json)
 
 
