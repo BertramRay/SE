@@ -9,16 +9,25 @@ class Question_provider():
 	def __init__ (self):
 		self.Json_maintainer = Json_maintain()
 
-	#现在假定会有两种选择题目的模式，一种是通过条件找到题目，一种是查看做错的题目,返回的是一个装着题号的list
+	#通过条件筛选题目，如果是没有做过的题目，不会有对错选项，所以对错选项默认置为None
 	def fetch_by_condition(self,typ,diff,doneOrnot,RightOrWrong=None):
-		#
-		if RightorWrong ！=None:
-			l = list(self.Json_maintainer[RightOrWrong].keys())
-			return l
-		else:
-			num = self.Json_maintainer.quesions_repo['']
+		#判断是做过的还是没做过的
+		if doneOrnot =='done':
+			#做过的，判断是Right还是Wrong
+			if RightOrWrong == 'Right':
+				l = self.Json_maintainer.questions_repo['done']['Right'][typ][diff]
+			elif RightOrWrong == 'Wrong':
+				l = self.Json_maintainer.questions_repo['done']['Wrong'][typ][diff]
+			else:
+				l = None
+		elif doneOrnot == 'Undone':
+			l = self.Json_maintainer.questions_repo['Undone'][typ][diff]
 
-		pass
+		else:
+			l = None
+
+		return l
+
 
 	#通过题号获取题目
 	def fetch_by_num(self,num):
@@ -34,3 +43,5 @@ class Question_provider():
 		pass
 
 
+if __name__ == '__main__':
+	pass

@@ -37,6 +37,12 @@ class Json_maintain():
 	#修改answer_history的数据结构，目前只能回答，也就是没有把回答记录删去的功能，只能覆盖回答记录
 	def answer_history_alter(self,num,answer,rightOrwrong="Wrong"):
 		#修改类内部的数据结构
+		#首先判断这道题目有没有答过，答了，就要删除原先的答题记录
+		if num in self.answer_history['Right'].keys(): 
+			del self.answer_history['Right'][num]
+		if num in self.answer_history['Wrong'].keys():
+			del self.answer_history['Wrong'][num]
+
 		self.answer_history[rightOrwrong][num] = answer
 		#利用refresh将新内容冲回文件,同时也刷新了repo和structure，一举两得
 		self.refresh()
@@ -96,24 +102,30 @@ class Json_maintain():
 
 	#结合回答历史，做一个新的repo,repo的一级结构是这道题目是否回答过，二级结构是这道题目是否回答正确，三级结构之后就和questions_structure一样了
 	def repo_build(self):
-		dic = {'done':{},'undone':{}}
+		dic = {'done':{'Right':{},'Wrong':{}},'undone':{}}
 		for typ_k,typ_v in self.questions_structure.items():
 			#判断题型是否加入字典
-			if typ_k not in dic['done'].keys():
-				dic['done'][typ_k] ={}
+			if typ_k not in dic['done']['Right'].keys():
+				dic['done']['Right'][typ_k] ={}
+			if typ_k not in dic['done']['Wrong'].keys():
+				dic['done']['Wrong'][typ_k] ={}
 			if typ_k not in dic['undone'].keys():
 				dic['undone'][typ_k] ={}
 			for diff_k,diff_v in typ_v.items():
 				#判断难度
-				if diff_k not in dic['done'][typ_k].keys():
-					dic['done'][typ_k][diff_k] = []
+				if diff_k not in dic['done']['Right'][typ_k].keys():
+					dic['done']['Right'][typ_k][diff_k] = []
+				if diff_k not in dic['done']['Wrong'][typ_k].keys():
+					dic['done']['Wrong'][typ_k][diff_k] = []
 				if diff_k not in dic['undone'][typ_k].keys():
 					dic['undone'][typ_k][diff_k] = []
 				
 				#接下来判断每个题号是否在answer_history中
 				for num in diff_v:
-					if num in self.answer_history['Right'].keys() or num in self.answer_history['Wrong'].keys():
-						dic['done'][typ_k][diff_k].append(num)
+					if num in self.answer_history['Right'].keys():
+						dic['done']['Right'][typ_k][diff_k].append(num)
+					if num in self.answer_history['Wrong'].keys():
+						dic['done']['Wrong'][typ_k][diff_k].append(num)
 					else:
 						dic['undone'][typ_k][diff_k].append(num)
 
@@ -124,10 +136,10 @@ if __name__ == '__main__':
 	json_maintainer = Json_maintain()
 
 
-	cpprint(json_maintainer.questions_repo)
-	# cpprint(json_maintainer.questions_structure)
+	# cpprint(json_maintainer.questions_repo)
+	# # cpprint(json_maintainer.questions_structure)
 	cpprint(json_maintainer.answer_history)
-	json_maintainer.answer_history_alter('2','b','Wrong')
+	json_maintainer.answer_history_alter('2','a','Right')
 	cpprint(json_maintainer.answer_history)
 
 
