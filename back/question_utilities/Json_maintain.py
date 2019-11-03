@@ -136,7 +136,7 @@ if __name__ == '__main__':
 	json_maintainer = Json_maintain()
 
 
-	# cpprint(json_maintainer.questions_repo)
+	cpprint(json_maintainer.questions_repo)
 	# # cpprint(json_maintainer.questions_structure)
 	cpprint(json_maintainer.answer_history)
 	json_maintainer.answer_history_alter('2','a','Right')

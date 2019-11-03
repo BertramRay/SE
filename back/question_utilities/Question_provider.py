@@ -18,10 +18,12 @@ class Question_provider():
 				l = self.Json_maintainer.questions_repo['done']['Right'][typ][diff]
 			elif RightOrWrong == 'Wrong':
 				l = self.Json_maintainer.questions_repo['done']['Wrong'][typ][diff]
+			elif RightOrWrong == 'All':
+				l = self.Json_maintainer.questions_repo['done']['Right'][typ][diff]+self.Json_maintainer.questions_repo['done']['Wrong'][typ][diff]
 			else:
 				l = None
-		elif doneOrnot == 'Undone':
-			l = self.Json_maintainer.questions_repo['Undone'][typ][diff]
+		elif doneOrnot == 'undone':
+			l = self.Json_maintainer.questions_repo['undone'][typ][diff]
 
 		else:
 			l = None
@@ -35,13 +37,30 @@ class Question_provider():
 		return question
 
 	#获取对应题号的题目的答案
-	def get_answer(self):
-		pass
+	def get_answer(self,num):
+		answer = self.Json_maintainer.answers[num]
+		return answer
 
 	#返回答题结果，Json_maintainer的answer_history进行修改
-	def answer_history_alter(self):
-		pass
+	def answer_history_alter(self,num,answer,rightOrwrong="Wrong"):
+		self.Json_maintainer.answer_history_alter(num,answer,rightOrwrong="Wrong")
 
 
 if __name__ == '__main__':
-	pass
+	provider = Question_provider()
+	#根据条件选题目
+	question_nums = provider.fetch_by_condition(typ ='双空',diff = 'easy',doneOrnot='done',RightOrWrong='Wrong')
+	print(question_nums)
+	#根据序号返回题目
+	questions = []
+	answers = []
+	for num in question_nums:
+		question = provider.fetch_by_num(num)
+		questions.append(question)
+		answer = provider.get_answer(num)
+		answers.append(answer)
+	print(questions)
+	print(answers)
+	provider.answer_history_alter('2','a','Wrong')
+	question_nums = provider.fetch_by_condition(typ ='双空',diff = 'easy',doneOrnot='done',RightOrWrong='Right')
+	print(question_nums)
