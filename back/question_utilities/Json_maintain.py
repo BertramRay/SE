@@ -2,7 +2,7 @@ import json
 from prettyprinter import cpprint
 
 from json_transfer import structure_create
-
+from tools import *
 
 
 '''
@@ -12,7 +12,7 @@ from json_transfer import structure_create
 
 
 class Json_maintain():
-	def __init__(self,questions_contents_name="questions_contents.json",questions_structure_name="questions_structure.json",answer_history_name="answer_history.json",answers_name="answers.json",explanations_name = 'explanations.json'):
+	def __init__(self,questions_contents_name=questions_contents_name,questions_structure_name=questions_structure_name,answer_history_name=answer_history_name,answers_name=answers_name,explanations_name =explanations_name):
 		self.questions_contents_name = questions_contents_name
 		self.questions_structure_name = questions_structure_name
 		self.answer_history_name =answer_history_name
@@ -111,23 +111,23 @@ class Json_maintain():
 				dic['done']['Wrong'][typ_k] ={}
 			if typ_k not in dic['undone'].keys():
 				dic['undone'][typ_k] ={}
-			for diff_k,diff_v in typ_v.items():
+			for dif_k,dif_v in typ_v.items():
 				#判断难度
-				if diff_k not in dic['done']['Right'][typ_k].keys():
-					dic['done']['Right'][typ_k][diff_k] = []
-				if diff_k not in dic['done']['Wrong'][typ_k].keys():
-					dic['done']['Wrong'][typ_k][diff_k] = []
-				if diff_k not in dic['undone'][typ_k].keys():
-					dic['undone'][typ_k][diff_k] = []
+				if dif_k not in dic['done']['Right'][typ_k].keys():
+					dic['done']['Right'][typ_k][dif_k] = []
+				if dif_k not in dic['done']['Wrong'][typ_k].keys():
+					dic['done']['Wrong'][typ_k][dif_k] = []
+				if dif_k not in dic['undone'][typ_k].keys():
+					dic['undone'][typ_k][dif_k] = []
 				
 				#接下来判断每个题号是否在answer_history中
-				for num in diff_v:
+				for num in dif_v:
 					if num in self.answer_history['Right'].keys():
-						dic['done']['Right'][typ_k][diff_k].append(num)
+						dic['done']['Right'][typ_k][dif_k].append(num)
 					if num in self.answer_history['Wrong'].keys():
-						dic['done']['Wrong'][typ_k][diff_k].append(num)
+						dic['done']['Wrong'][typ_k][dif_k].append(num)
 					else:
-						dic['undone'][typ_k][diff_k].append(num)
+						dic['undone'][typ_k][dif_k].append(num)
 
 		return dic
 
@@ -136,10 +136,11 @@ if __name__ == '__main__':
 	json_maintainer = Json_maintain()
 
 
-	cpprint(json_maintainer.questions_repo)
+	# cpprint(json_maintainer.questions_repo)
 	# # cpprint(json_maintainer.questions_structure)
 	cpprint(json_maintainer.answer_history)
 	json_maintainer.answer_history_alter('2','a','Right')
 	cpprint(json_maintainer.answer_history)
+	# cpprint(json_maintainer.explanations)
 
 

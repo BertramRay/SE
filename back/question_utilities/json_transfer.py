@@ -1,5 +1,7 @@
 import json
 from prettyprinter import cpprint
+from tools import *
+
 
 '''
 用于转换队友的json为我们所需要的格式
@@ -13,9 +15,9 @@ answer_history
 '''
 
 #创建题目结构
-def structure_create(src_name = "questions_contents.json",dest_name = "questions_structure.json"):
+def structure_create(src_name = questions_contents_name,dest_name = questions_structure_name):
 
-	src_file = open(src_name,'r+',encoding="utf8")
+	src_file = open(src_name,'r',encoding="utf8")
 	src_json = json.load(src_file)
 
 	dest_dic = {}
@@ -44,7 +46,7 @@ def structure_create(src_name = "questions_contents.json",dest_name = "questions
 
 
 #创建回答历史，结构为正确/错误  '题号':回答
-def answer_history_create(dest_name = "answer_history.json"):
+def answer_history_create(dest_name = answer_history_name):
 
 	answer_history = {'Right':{},'Wrong':{}}
 
