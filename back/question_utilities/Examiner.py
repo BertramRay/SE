@@ -20,6 +20,10 @@ class Examiner():
 
 
 
+	#改变room_params的参数
+	def room_change(self,params=0):
+		self.room_params=0
+
 	#调用方法的时候检查room_params是否为None进行判断，如果非空，根据参数构建paper,然后返回paper
 	#现暂时给定两种room_params,一种是错题重测(1)，会返回所有错题，一种是随机未做过的题,各类题型(0)
 	def test(self):
