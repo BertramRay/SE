@@ -2,7 +2,7 @@ from prettyprinter import cpprint
 
 from Question_provider import Question_provider
 from tools import *
-
+import sys
 
 '''
 这个类的作用是根据考场参数反复调用抽题模块，并且设计paper这么一个东西，还要提供review和judege的功能
@@ -14,38 +14,30 @@ class Examiner():
 	def __init__(self):
 		self.provider = Question_provider()
 		self.paper = None
-		self.room_params = None
 		self.result = None
 
 
-
-
-	#改变room_params的参数
-	def room_change(self,params=0):
-		self.room_params=0
-
 	#调用方法的时候检查room_params是否为None进行判断，如果非空，根据参数构建paper,然后返回paper
 	#现暂时给定两种room_params,一种是错题重测(1)，会返回所有错题，一种是随机未做过的题,各类题型(0)
-	def test(self):
-		if self.room_params == 0:
+	def test(self,room_params):
+		if room_params == '0':
 			nums = []
 			for typ in typs:
 				for dif in difs: 
 					nums += self.provider.fetch_by_condition(typ=typ,dif=dif,doneOrnot='undone',RightOrWrong='Right')
 
-		elif self.room_params == 1:
+		elif room_params == '1':
 			nums = []
 			for typ in typs:
 				for dif in difs:
 					nums+=self.provider.fetch_by_condition(typ=typ,dif=dif,doneOrnot='done',RightOrWrong='Wrong')
 
 		else:
+			print('Wrong Room')
 			nums=[]
 
-		paper = self.paper_make(nums)
-		self.paper = paper
-		# print(paper)
-		return paper 
+
+		return nums
 
 	#对paper进行评估，注意对于paper内没有回答过的题目，一律不批卷，最后修改paper为一个做过（本次test）的题目的paper
 	def judge(self):
@@ -93,10 +85,51 @@ class Examiner():
 		self.provider.answer_history_alter(num,answer,rightOrwrong="Wrong")
 
 
-if __name__ == '__main__':
+
+def main(function_no,params):
+	# print(function_no)
 	examiner = Examiner()
-	examiner.room_params = 0
-	examiner.test()
-	# print(examiner.paper)
-	examiner.judge()
-	print(examiner.review())
+	#四种功能
+	funcion_list = [examiner.test,examiner.judge,examiner.review]
+
+	#通过params的参数个数
+	length = len(params)
+	if length ==1:
+		param_1 = params[0]
+		res = funcion_list[function_no](param_1)
+		return res
+
+	if length ==2:
+		param_1 = params[0]
+		param_2 = params[1]
+		res = funcion_list[function_no](param_1,param_2)
+		return res
+	
+	if length ==3:
+		param_1 = params[0]
+		param_2 = params[1]
+		param_3 = params[2]
+		res = funcion_list[function_no](param_1,param_2,param_3)
+		return res
+	
+	if length ==4:
+		param_1 = params[0]
+		param_2 = params[1]
+		param_3 = params[2]
+		param_4 = params[3]
+		res = funcion_list[function_no](param_1,param_2,param_3,param_4)
+		return res
+
+if __name__ == '__main__':
+	# examiner = Examiner()
+	# examiner.room_params = 0
+	# examiner.test()
+	# # print(examiner.paper)
+	# examiner.judge()
+	# print(examiner.review())
+	args = sys.argv
+	fun_no = int(args[1])
+	#函数参数
+	fun_param = args[2:]
+	res = main(fun_no,fun_param)
+	print(res)
