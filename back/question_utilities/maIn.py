@@ -1,6 +1,6 @@
 from Question_provider import Question_provider
 from Examiner import Examiner
-
+import sys
 '''
 主函数，根据所给参数调用对应方法
 
@@ -23,6 +23,7 @@ def main(mod_num = 0,function_num=0,*params):
 	res = mod_list[mod_num][function_num](*params)
 	return res
 if __name__ == '__main__':
-	main(0,0,1)
+	mod_num = int(sys.argv)
+	main(0,0,(1))
 	res = main(0,1)
 	print(res)

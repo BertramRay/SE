@@ -1,4 +1,6 @@
 from Json_maintain import Json_maintain
+import sys
+
 
 '''
 	抽题器，给定参数（类型，难度，是否做过，是否做对，返回一道题目）
@@ -51,21 +53,66 @@ class Question_provider():
 		self.Json_maintainer.answer_history_alter(num,answer,rightOrwrong="Wrong")
 
 
-if __name__ == '__main__':
+def main(function_no,params):
+	# print(function_no)
 	provider = Question_provider()
-	#根据条件选题目
-	question_nums = provider.fetch_by_condition(typ ='双空',dif = 'easy',doneOrnot='done',RightOrWrong='Wrong')
-	print(question_nums)
-	#根据序号返回题目
-	questions = []
-	answers = []
-	for num in question_nums:
-		question = provider.fetch_by_num(num)
-		questions.append(question)
-		answer = provider.get_answer(num)
-		answers.append(answer)
-	print(questions)
-	print(answers)
-	provider.answer_history_alter('2','a','Wrong')
-	question_nums = provider.fetch_by_condition(typ ='双空',dif = 'easy',doneOrnot='done',RightOrWrong='Right')
-	print(question_nums)
+	#四种功能
+	funcion_list = [provider.fetch_by_condition,provider.fetch_by_num,provider.get_answer,provider.get_explanation,provider.answer_history_alter]
+
+	#通过params的参数个数
+	length = len(params)
+	if length ==1:
+		param_1 = params[0]
+		res = funcion_list[function_no](param_1)
+		return res
+
+	if length ==2:
+		param_1 = params[0]
+		param_2 = params[1]
+		res = funcion_list[function_no](param_1,param_2)
+		return res
+	
+	if length ==3:
+		param_1 = params[0]
+		param_2 = params[1]
+		param_3 = params[2]
+		res = funcion_list[function_no](param_1,param_2,param_3)
+		return res
+	
+	if length ==4:
+		param_1 = params[0]
+		param_2 = params[1]
+		param_3 = params[2]
+		param_4 = params[3]
+		res = funcion_list[function_no](param_1,param_2,param_3,param_4)
+		return res
+	
+	
+
+
+if __name__ == '__main__':
+	# provider = Question_provider()
+	# #根据条件选题目
+	# question_nums = provider.fetch_by_condition(typ ='双空',dif = 'easy',doneOrnot='done',RightOrWrong='Wrong')
+	# print(question_nums)
+	# #根据序号返回题目
+	# questions = []
+	# answers = []
+	# for num in question_nums:
+	# 	question = provider.fetch_by_num(num)
+	# 	questions.append(question)
+	# 	answer = provider.get_answer(num)
+	# 	answers.append(answer)
+	# print(questions)
+	# print(answers)
+	# provider.answer_history_alter('2','a','Wrong')
+	# question_nums = provider.fetch_by_condition(typ ='双空',dif = 'easy',doneOrnot='done',RightOrWrong='Right')
+	# print(question_nums)
+
+	args = sys.argv
+	#功能参数
+	fun_no = int(args[1])
+	#函数参数
+	fun_param = args[2:]
+	res = main(fun_no,fun_param)
+	print(res)
