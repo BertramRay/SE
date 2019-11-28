@@ -50,7 +50,7 @@ class Question_provider():
 
 	#返回答题结果，Json_maintainer的answer_history进行修改
 	def answer_history_alter(self,num,answer,rightOrwrong="Wrong"):
-		self.Json_maintainer.answer_history_alter(num,answer,rightOrwrong="Wrong")
+		self.Json_maintainer.answer_history_alter(num,answer,rightOrwrong=rightOrwrong)
 
 
 def main(function_no,params):
