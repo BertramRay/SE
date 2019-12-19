@@ -11,6 +11,7 @@ questions_structure_name = 'questions_structure.json'
 answer_history_name = 'answer_history.json'
 answers_name = "answers.json"
 explanations_name = "explanations.json"
+collection_name = 'collection.json'
 
 
 

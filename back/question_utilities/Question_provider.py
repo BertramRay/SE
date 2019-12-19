@@ -53,6 +53,9 @@ class Question_provider():
 		self.Json_maintainer.answer_history_alter(num,answer,rightOrwrong=rightOrwrong)
 
 
+	#将题目进行收藏
+	
+
 def main(function_no,params):
 	# print(function_no)
 	provider = Question_provider()

@@ -57,13 +57,22 @@ def answer_history_create(dest_name = answer_history_name):
 	file.close
 
 
-if __name__ == '__main__':
-	structure_create()
-	answer_history_create()
+#收藏历史创建
+def collection_create(dest_name= collection_name):
 
-	file = open('explanations.json','r',encoding ="utf8")
-	json = json.load(file)
-	file.close()
-	cpprint(json)
+	collection = {'Question':{}}
+	collection_json = json.dumps(collection)
+	file = open(dest_name,'w',encoding="utf8")
+	file.write(collection_json)
+	file.close
+
+if __name__ == '__main__':
+	# structure_create()
+	# answer_history_create()
+	collection_create()
+	# file = open('explanations.json','r',encoding ="utf8")
+	# json = json.load(file)
+	# file.close()
+	# cpprint(json)
 
 
