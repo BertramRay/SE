@@ -60,7 +60,7 @@ def answer_history_create(dest_name = answer_history_name):
 #收藏历史创建
 def collection_create(dest_name= collection_name):
 
-	collection = {'Question':{}}
+	collection = {'Question':[]}
 	collection_json = json.dumps(collection)
 	file = open(dest_name,'w',encoding="utf8")
 	file.write(collection_json)

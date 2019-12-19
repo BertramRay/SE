@@ -54,13 +54,26 @@ class Question_provider():
 
 
 	#将题目进行收藏
-	
+	def collection_alter(self,typ,fun,num):
+		self.Json_maintainer.collection_alter(typ,fun,num)
+
+	#获取收藏的题目
+	def get_collection(self,typ):
+		if typ in self.Json_maintainer.collection.keys():
+			return self.Json_maintainer.collection[typ]
 
 def main(function_no,params):
 	# print(function_no)
 	provider = Question_provider()
-	#四种功能
-	funcion_list = [provider.fetch_by_condition,provider.fetch_by_num,provider.get_answer,provider.get_explanation,provider.answer_history_alter]
+	#六种功能
+	funcion_list = [provider.fetch_by_condition,
+	provider.fetch_by_num,
+	provider.get_answer,
+	provider.get_explanation,
+	provider.answer_history_alter,
+	provider.get_collection,
+	provider.collection_alter
+	]
 
 	#通过params的参数个数
 	length = len(params)
@@ -95,6 +108,9 @@ def main(function_no,params):
 
 if __name__ == '__main__':
 	# provider = Question_provider()
+	# print(provider.get_collection('Question'))
+	# provider.collection_alter('Question','add','2')
+	# print(provider.get_collection('Question'))
 	# #根据条件选题目
 	# question_nums = provider.fetch_by_condition(typ ='双空',dif = 'easy',doneOrnot='done',RightOrWrong='Wrong')
 	# print(question_nums)
@@ -117,5 +133,6 @@ if __name__ == '__main__':
 	fun_no = int(args[1])
 	#函数参数
 	fun_param = args[2:]
+	print(fun_no)
 	res = main(fun_no,fun_param)
 	print(res)

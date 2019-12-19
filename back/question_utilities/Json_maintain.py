@@ -12,19 +12,20 @@ from tools import *
 
 
 class Json_maintain():
-	def __init__(self,questions_contents_name=questions_contents_name,questions_structure_name=questions_structure_name,answer_history_name=answer_history_name,answers_name=answers_name,explanations_name =explanations_name):
+	def __init__(self,questions_contents_name=questions_contents_name,questions_structure_name=questions_structure_name,answer_history_name=answer_history_name,answers_name=answers_name,explanations_name =explanations_name,collection_name=collection_name):
 		self.questions_contents_name = questions_contents_name
 		self.questions_structure_name = questions_structure_name
 		self.answer_history_name =answer_history_name
 		self.answers_name = answers_name
 		self.explanations_name = explanations_name
+		self.collection_name =collection_name
 		#读入json
 		self.questions_contents = None
 		self.questions_structure = None
 		self.answer_history = None
 		self.answers = None
 		self.explanations = None
-
+		self.collection = None
 		self.load()
 		#构建题库数据结构
 		self.questions_repo = self.repo_build()
@@ -46,10 +47,29 @@ class Json_maintain():
 		self.answer_history[rightOrwrong][num] = answer
 		#利用refresh将新内容冲回文件,同时也刷新了repo和structure，一举两得
 		self.refresh()
+		# return 0
 
 	#修改question_contents的内容
 	def questions_contents_alter(self):
 		pass
+
+
+	#删改collection中的内容
+	def collection_alter(self,typ,fun,num):
+		#typ代表加入的功能，目前仅仅有Question，fun代表功能，目前只有增加和删除，num为题号
+		#判断typ是否是keys，增加鲁棒性，错误返回1
+		if typ not in self.collection.keys():
+			return 1
+		else:
+			if fun == 'add':
+				if num not in self.collection[typ]:
+					self.collection[typ].append(num)
+			elif fun =='delete':
+				if num in self.collection[typ]:
+					self.collection[typ].remove(num)
+			else:
+				return 1
+		self.refresh()
 
 
 	#保存题库文件和answer_history文件
@@ -64,6 +84,8 @@ class Json_maintain():
 		self.json_save(self.answers,self.answers_name)
 		#保存explanations
 		self.json_save(self.explanations,self.explanations_name)
+		#保存collection
+		self.json_save(self.collection,self.collection_name)
 
 	#读入所有题库文件和answer_history文件
 	def load(self):
@@ -72,6 +94,7 @@ class Json_maintain():
 		self.answer_history = self.json_load(self.answer_history_name)
 		self.explanations = self.json_load(self.explanations_name)
 		self.answers = self.json_load(self.answers_name)
+		self.collection = self.json_load(self.collection_name)
 
 	#刷新repo，由于answer_history在使用的过程中可能会变，日后可能会添加自己增加题目的功能,本质是刷新所有文件和类内数据结构
 	def refresh(self):
@@ -134,13 +157,16 @@ class Json_maintain():
 
 if __name__ == '__main__':
 	json_maintainer = Json_maintain()
-
-
+	print(json_maintainer.collection)
+	json_maintainer.collection_alter('Question','add','1')
+	print(json_maintainer.collection)
+	json_maintainer.collection_alter('Question','delete','2')
+	print(json_maintainer.collection)
 	# cpprint(json_maintainer.questions_repo)
 	# # cpprint(json_maintainer.questions_structure)
-	cpprint(json_maintainer.answer_history)
-	json_maintainer.answer_history_alter('2','a','Right')
-	cpprint(json_maintainer.answer_history)
+	# cpprint(json_maintainer.answer_history)
+	# json_maintainer.answer_history_alter('2','a','Right')
+	# cpprint(json_maintainer.answer_history)
 	# cpprint(json_maintainer.explanations)
 
 
